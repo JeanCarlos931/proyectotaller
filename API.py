@@ -19,6 +19,10 @@ def chat_con_php(mensaje:str)->str:
     Returns:
         str: Respuesta generada por el asistente en el servidor PHP o mensaje de error.
     """
+
+    with open("usuario.txt", "r", encoding="utf-8") as archivo_usuario:
+            user = archivo_usuario.read().strip()
+
     # Se añade el mensaje del usuario al historial de la conversación.
     conversacion.append({"role": "user", "content": mensaje})
 
@@ -35,6 +39,10 @@ def chat_con_php(mensaje:str)->str:
         # Se añade la respuesta del asistente al historial de la conversación.
         conversacion.append({"role": "assistant", "content": mensaje_respuesta})
         
+        with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as registro: #Guardar la conversación en el historial
+
+            registro.close()
+
         return mensaje_respuesta  # Se retorna el mensaje de respuesta del asistente.
     
     except Exception as e:

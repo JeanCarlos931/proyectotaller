@@ -1,9 +1,5 @@
 import json
 
-
-with open("registro.txt", "r", encoding="utf-8") as registro:
-    datos = json.load(registro)
-
 def login():
     user=input("Usurario: ").lower()
     try:    #Si existe el archivo con el usuario entonces funciona y retorna false
@@ -21,12 +17,17 @@ def register()->bool:
     """
     
     user=input("Usurario: ").lower()
+    with open("usuario.txt", "w", encoding="utf-8") as archivo_usuario: #Guarda el usuario en un archivo temporal
+        archivo_usuario.write(user)
+
+    list_user= [user]
     try:    #Si existe el archivo con el usuario entonces funciona y retorna false
         with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as registro:
-            registro.close()
+            pass
         return(False)
-    except: #Si no existe da error el try y en el except crea el archivo retornando ademas un true
+    except: #Si no existe da error el try, en el except crea el archivo retornando ademas un true
         with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as registro:
+            json.dump(list_user, registro, indent=4)
             registro.close()
         return(True)
 
