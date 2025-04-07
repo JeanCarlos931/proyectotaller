@@ -2,19 +2,15 @@ import json
 import customtkinter as tk
 from PIL import Image
 import os
+from datetime import datetime
 import API
 
 tk.set_default_color_theme("green")
 
 def guardar_usuario_actual(user):
-    """_summary_
-
-    Args:
-        user (_persona_): guarda la persona en un documento txt.
-    """
+    """Guarda el nombre del usuario en un archivo txt."""
     with open("usuario.txt", "w", encoding="utf-8") as archivo:
         archivo.write(user)
-
 
 def login():
     user = entry_login.get().lower()
@@ -24,6 +20,7 @@ def login():
 
     try:
         with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivo:
+            global historial_guardado  # Hacerlo global para poder usarlo en otras funciones
             historial_guardado = json.load(archivo)
             mensaje.configure(text=f"Inicio de sesión exitoso. Bienvenido, {user}.", text_color="green")
     except FileNotFoundError:
@@ -35,23 +32,51 @@ def login():
     ventana_chat.geometry("1000x700")
     ventana_chat.title(f"Sesión de {user}")
 
-    # ─────────── PANEL IZQUIERDO: HISTORIAL ───────────
+    # Panel izquierdo: historial
     marco_historial = tk.CTkScrollableFrame(ventana_chat, width=300, height=660)
     marco_historial.place(x=10, y=20)
 
     tk.CTkLabel(marco_historial, text="Historial", font=("Arial", 18, "bold")).pack(pady=10)
 
-    for msg in historial_guardado[1:]:
-        mensaje_hist = tk.CTkLabel(marco_historial,text=msg,anchor="w",justify="left",wraplength=270,fg_color="#333333",text_color="white",corner_radius=10)
-        mensaje_hist.pack(padx=10, pady=5, anchor="w")
-
-    # ─────────── PANEL DERECHO: CHAT ACTUAL ───────────
+    # Panel derecho: chat actual
     marco_chat = tk.CTkScrollableFrame(ventana_chat, width=650, height=600)
     marco_chat.place(x=330, y=20)
 
+    # Función para mostrar mensajes
     def mostrar_mensaje(texto, alineado_izq=True):
-        burbuja = tk.CTkLabel(marco_chat,text=texto,anchor="w" if alineado_izq else "e",justify="left",fg_color="#2a2a2a" if alineado_izq else "#1f6aa5",text_color="white",corner_radius=12,width=500,wraplength=500)
-        burbuja.pack(padx=10, pady=5, anchor="w" if alineado_izq else "e")
+        burbuja = tk.CTkLabel(marco_chat, text=texto, anchor="w" if alineado_izq else "e", justify="left", fg_color="#2a2a2a" if alineado_izq else "#1f6aa5", text_color="white", corner_radius=12, width=500, wraplength=500)
+        burbuja.pack(padx=10, pady=(5, 0), anchor="w" if alineado_izq else "e")
+
+    # Función para mostrar la fecha
+    def mostrar_fecha(fecha):
+        label_fecha = tk.CTkLabel(marco_chat, text=fecha, font=("Arial", 10), text_color="#aaaaaa")
+        label_fecha.pack(pady=(0, 5))
+
+    # Función para cargar el chat cuando se hace clic en una pregunta del historial
+    def cargar_chat(pregunta_seleccionada):
+        # Limpiar el área de chat antes de cargar nuevos mensajes
+        for widget in marco_chat.winfo_children():
+            widget.destroy()
+
+        # Buscar la pregunta seleccionada en el historial guardado
+        for entrada in historial_guardado:
+            if isinstance(entrada, dict):  # Verifica que la entrada sea un diccionario
+                if entrada.get("pregunta") == pregunta_seleccionada:  # Usar .get() para evitar KeyError
+                    # Mostrar la pregunta y la respuesta en el chat
+                    mostrar_mensaje(f"Tú: {entrada['pregunta']}", alineado_izq=False)
+                    mostrar_fecha(entrada["timestamp"])
+                    mostrar_mensaje(f"ChatBot: {entrada['respuesta']}", alineado_izq=True)
+                    mostrar_fecha(entrada["timestamp"])
+                    break
+            else:
+                print(f"Entrada no válida: {entrada}")  # Agrega un mensaje para depurar el tipo de entrada
+
+    # Mostrar preguntas como botones en el historial
+    for entrada in historial_guardado:
+        if isinstance(entrada, dict):  # Solo si es un diccionario válido
+            hora = entrada.get("timestamp", "")[-5:]
+            btn = tk.CTkButton(marco_historial, text=f"{entrada['pregunta']} ({hora})", anchor="w", width=270, command=lambda p=entrada["pregunta"]: cargar_chat(p))
+            btn.pack(padx=10, pady=5, anchor="w")
 
     # Campo de texto y botón de enviar
     caja_mensaje = tk.CTkEntry(ventana_chat, width=500)
@@ -61,31 +86,34 @@ def login():
         texto = caja_mensaje.get().strip()
         if texto:
             mostrar_mensaje(f"Tú: {texto}", alineado_izq=False)
-            historial_guardado.append(f"Tú: {texto}")
             caja_mensaje.delete(0, "end")
 
-            with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo:
-                json.dump(historial_guardado, archivo, indent=4)
+            Mensajerespuesta = API.chat(texto)
+            if Mensajerespuesta:
+                mostrar_mensaje(f"ChatBot: {Mensajerespuesta}", alineado_izq=True)
 
-            # También mostrar en historial (izquierda)
-            mensaje_hist = tk.CTkLabel(marco_historial,text=f"Tú: {texto}",anchor="w",justify="left",wraplength=270,fg_color="#333333",text_color="white",corner_radius=10)
-            mensaje_hist.pack(padx=10, pady=5, anchor="w")
-        Mensajerespuesta=API.chat(texto)
-        if Mensajerespuesta:
-            mostrar_mensaje(f"ChatBot: {Mensajerespuesta}", alineado_izq=True)
+                nueva_entrada = {
+                    "pregunta": texto,
+                    "respuesta": Mensajerespuesta,
+                    "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M")
+                }
+
+                # Agregar la nueva entrada al historial_guardado
+                historial_guardado.append(nueva_entrada)
+
+                with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo:
+                    json.dump(historial_guardado, archivo, indent=4)
+
+                hora = nueva_entrada["timestamp"][-5:]
+                btn = tk.CTkButton(marco_historial, text=f"{texto} ({hora})", anchor="w", width=270,command=lambda p=texto: cargar_chat(p))
+                btn.pack(padx=10, pady=5, anchor="w")
+
             caja_mensaje.delete(0, "end")
-
-            with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo:
-                json.dump(historial_guardado, archivo, indent=4)
-
-            # También mostrar en historial (izquierda)
-            mensaje_hist = tk.CTkLabel(marco_historial,text=f"Tú: {texto}",anchor="w",justify="left",wraplength=270,fg_color="#333333",text_color="white",corner_radius=10)
-            mensaje_hist.pack(padx=10, pady=5, anchor="w")
 
     boton_enviar = tk.CTkButton(ventana_chat, text="Enviar", command=enviar, width=100)
     boton_enviar.place(x=840, y=630)
 
-    # Botón volver
+    # Botón de cerrar chat
     def cerrar_chat():
         ventana_chat.destroy()
         ventana.deiconify()
@@ -110,7 +138,6 @@ def register():
 
     guardar_usuario_actual(user)
     mensaje.configure(text="Usuario registrado correctamente.", text_color="green")
-
 
 # Interfaz principal
 ventana = tk.CTk()
