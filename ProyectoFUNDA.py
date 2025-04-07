@@ -104,7 +104,7 @@ def register():
 ventana = tk.CTk()
 ventana.geometry("700x700")
 
-ruta_imagen = r"C:\Users\lucas\OneDrive\Escritorio\Proyecto Intro\Queso.png"
+ruta_imagen = "Queso.png"
 dark_image = Image.open(ruta_imagen)
 my_image = tk.CTkImage(light_image=dark_image, size=(370, 370))
 
