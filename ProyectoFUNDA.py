@@ -2,6 +2,7 @@ import json
 import customtkinter as tk
 from PIL import Image
 import os
+import API
 
 tk.set_default_color_theme("green")
 
@@ -61,6 +62,17 @@ def login():
         if texto:
             mostrar_mensaje(f"Tú: {texto}", alineado_izq=False)
             historial_guardado.append(f"Tú: {texto}")
+            caja_mensaje.delete(0, "end")
+
+            with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo:
+                json.dump(historial_guardado, archivo, indent=4)
+
+            # También mostrar en historial (izquierda)
+            mensaje_hist = tk.CTkLabel(marco_historial,text=f"Tú: {texto}",anchor="w",justify="left",wraplength=270,fg_color="#333333",text_color="white",corner_radius=10)
+            mensaje_hist.pack(padx=10, pady=5, anchor="w")
+        Mensajerespuesta=API.chat(texto)
+        if Mensajerespuesta:
+            mostrar_mensaje(f"ChatBot: {Mensajerespuesta}", alineado_izq=True)
             caja_mensaje.delete(0, "end")
 
             with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo:

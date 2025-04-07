@@ -54,17 +54,16 @@ def chat_con_php(mensaje:str)->str:
         return f"Error al conectar con el servidor: {e}"
 
 # Ciclo de conversación donde el usuario puede interactuar con el asistente hasta que escriba 'salir'.
-def chat():
+def chat(mensaje:str):
     while True:
-        mensaje = input("Tú: ")  # Se solicita un mensaje al usuario.
-
+        
         # Si el usuario escribe 'salir', 'exit' o 'quit', finaliza el chat.
         if mensaje.lower() in ["salir", "exit", "quit"]:
-            print("ChatGPT: ¡Hasta luego!")
-            break  # Se rompe el bucle y termina el programa.
+            return("ChatGPT: ¡Hasta luego!")
+            # Se rompe el bucle y termina el programa.
 
         # Se envía el mensaje del usuario al servidor PHP y se recibe la respuesta.
         respuesta = chat_con_php(mensaje)
 
         # Se muestra la respuesta en la terminal.
-        print(f"ChatGPT: {respuesta}")
+        return(respuesta)

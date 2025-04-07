@@ -1,5 +1,4 @@
 import json
-import API
 
 
 def login():
@@ -35,8 +34,5 @@ def register()->bool:
         return(True)
 
 
-print(register())
-
-API.chat()
 
 
