@@ -1,3 +1,4 @@
+import json
 import requests  # Se importa la librería requests para hacer solicitudes HTTP.
 
 # URL del servidor PHP que maneja la lógica del chatbot.
@@ -39,9 +40,12 @@ def chat_con_php(mensaje:str)->str:
         # Se añade la respuesta del asistente al historial de la conversación.
         conversacion.append({"role": "assistant", "content": mensaje_respuesta})
         
-        with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as registro: #Guardar la conversación en el historial
+        with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivo_usuario: #Recupero la lista para agregar el chat
+            lista_archivo = json.load(archivo_usuario)
+            lista_archivo.append([conversacion])
 
-            registro.close()
+        with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo_usuario: #Actualiso el archivo de historial
+            json.dump(lista_archivo, archivo_usuario, indent=4)
 
         return mensaje_respuesta  # Se retorna el mensaje de respuesta del asistente.
     
@@ -49,20 +53,18 @@ def chat_con_php(mensaje:str)->str:
         # En caso de error (por ejemplo, problemas de conexión), se devuelve un mensaje de error.
         return f"Error al conectar con el servidor: {e}"
 
-# Mensaje de bienvenida para el usuario.
-print("Bienvenido al chat con ChatGPT (vía PHP). Escribe 'salir' para terminar.")
-
 # Ciclo de conversación donde el usuario puede interactuar con el asistente hasta que escriba 'salir'.
-while True:
-    mensaje = input("Tú: ")  # Se solicita un mensaje al usuario.
-    
-    # Si el usuario escribe 'salir', 'exit' o 'quit', finaliza el chat.
-    if mensaje.lower() in ["salir", "exit", "quit"]:
-        print("ChatGPT: ¡Hasta luego!")
-        break  # Se rompe el bucle y termina el programa.
+def chat():
+    while True:
+        mensaje = input("Tú: ")  # Se solicita un mensaje al usuario.
 
-    # Se envía el mensaje del usuario al servidor PHP y se recibe la respuesta.
-    respuesta = chat_con_php(mensaje)
-    
-    # Se muestra la respuesta en la terminal.
-    print(f"ChatGPT: {respuesta}")
+        # Si el usuario escribe 'salir', 'exit' o 'quit', finaliza el chat.
+        if mensaje.lower() in ["salir", "exit", "quit"]:
+            print("ChatGPT: ¡Hasta luego!")
+            break  # Se rompe el bucle y termina el programa.
+
+        # Se envía el mensaje del usuario al servidor PHP y se recibe la respuesta.
+        respuesta = chat_con_php(mensaje)
+
+        # Se muestra la respuesta en la terminal.
+        print(f"ChatGPT: {respuesta}")

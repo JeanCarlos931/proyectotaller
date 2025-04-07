@@ -1,4 +1,6 @@
 import json
+import API
+
 
 def login():
     user=input("Usurario: ").lower()
@@ -8,6 +10,7 @@ def login():
         return(True)
     except: #Si no existe da error el try y en el except crea el archivo retornando ademas un true
         return(False)
+
 
 def register()->bool:
     """Registra el usuario, si existe retorna un False indicando que ya está registrado ese usuario, si no existe retorna un True indicando que se registro correctamente
@@ -34,5 +37,6 @@ def register()->bool:
 
 print(register())
 
+API.chat()
 
 
