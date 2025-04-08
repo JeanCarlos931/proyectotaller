@@ -243,7 +243,7 @@ ventana = tk.CTk()
 ventana.geometry("700x700") # Tamaño de la ventana
 
 # Cargar y mostrar imagen
-ruta_Imagen = "Queso.png"
+ruta_Imagen = "TheBurger_IA.png"
 dark_Image = Image.open(ruta_Imagen)
 my_Image = tk.CTkImage(light_image=dark_Image, size=(370, 370))
 
