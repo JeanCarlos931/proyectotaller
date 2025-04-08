@@ -52,8 +52,23 @@ def login():
         label_fecha = tk.CTkLabel(marco_chat, text=fecha, font=("Arial", 10), text_color="#aaaaaa")
         label_fecha.pack(pady=(0, 5))
 
+    pregunta_actual = tk.StringVar()  # Guardará la pregunta seleccionada
+    
     # Función para cargar el chat cuando se hace clic en una pregunta del historial
     def cargar_chat(pregunta_seleccionada):
+        pregunta_actual.set(pregunta_seleccionada)  # Guardamos la selección
+
+        # Limpiar el área de chat antes de cargar nuevos mensajes
+        for widget in marco_chat.winfo_children():
+            widget.destroy()
+
+        for entrada in historial_guardado:
+            if isinstance(entrada, dict) and entrada.get("pregunta") == pregunta_seleccionada:
+                mostrar_mensaje(f"Tú: {entrada['pregunta']}", alineado_izq=False)
+                mostrar_fecha(entrada["timestamp"])
+                mostrar_mensaje(f"ChatBot: {entrada['respuesta']}", alineado_izq=True)
+                mostrar_fecha(entrada["timestamp"])
+                break
         # Limpiar el área de chat antes de cargar nuevos mensajes
         for widget in marco_chat.winfo_children():
             widget.destroy()
@@ -120,6 +135,53 @@ def login():
 
     boton_volver = tk.CTkButton(ventana_chat, text="Volver", command=cerrar_chat)
     boton_volver.place(x=10, y=10)
+
+    # --- BOTÓN PARA BUSCAR PALABRAS RELACIONADAS ---
+    def abrir_ventana_busqueda():
+        ventana_busqueda = tk.CTkToplevel(ventana_chat)
+        ventana_busqueda.title("Buscar en historial")
+        ventana_busqueda.geometry("500x400")
+        ventana_busqueda.configure(fg_color="#666666")
+
+        entrada_busqueda = tk.CTkEntry(ventana_busqueda, width=300, placeholder_text="Escribe una palabra clave")
+        entrada_busqueda.pack(pady=10)
+
+        resultado_box = tk.CTkTextbox(ventana_busqueda, width=460, height=280)
+        resultado_box.pack(pady=10)
+
+        def buscar_palabra():
+            palabra = entrada_busqueda.get().strip().lower()
+            resultado_box.delete("0.0", "end")
+            if palabra:
+                for entrada in historial_guardado:
+                    if isinstance(entrada, dict):
+                        if palabra in entrada["pregunta"].lower() or palabra in entrada["respuesta"].lower():
+                            resultado_box.insert("end", f"🟢 {entrada['pregunta']}\n{entrada['respuesta']}\n\n")
+
+        boton_realizar_busqueda = tk.CTkButton(ventana_busqueda, text="Buscar", command=buscar_palabra)
+        boton_realizar_busqueda.pack(pady=5)
+
+    # --- BOTÓN PARA RESUMIR EL CHAT ---
+    def resumir_conversacion():
+        seleccion = pregunta_actual.get()
+        if not seleccion:
+            mostrar_mensaje("Selecciona una pregunta del historial para resumirla.", alineado_izq=True)
+            return
+
+        for entrada in historial_guardado:
+            if isinstance(entrada, dict) and entrada.get("pregunta") == seleccion:
+                texto = f"Tú: {entrada['pregunta']}\nChatBot: {entrada['respuesta']}\n"
+                resumen = API.chat("Resume esta conversación:\n" + texto)
+                mostrar_mensaje("Resumen de la conversación:", alineado_izq=True)
+                mostrar_mensaje(resumen, alineado_izq=True)
+                break
+
+    # --- AGREGAR BOTONES AL FINAL ---
+    boton_buscar = tk.CTkButton(ventana_chat, text="🔍 Buscar en historial", fg_color="#35b46d", command=abrir_ventana_busqueda, width=200)
+    boton_buscar.place(x=330, y=670)
+
+    boton_resumen = tk.CTkButton(ventana_chat, text="📝 Resumir", fg_color="#35b46d", command=resumir_conversacion, width=200)
+    boton_resumen.place(x=550, y=670)
 
     ventana_chat.mainloop()
 
