@@ -48,7 +48,6 @@ def login():
     marco_Chat = tk.CTkScrollableFrame(ventana_Chat, width=650, height=600)
     marco_Chat.place(x=330, y=20)
 
-    # Función para mostrar mensajes
     def mostrar_mensaje(texto, alineado_izq=True):
         """_mostrar mensaje_
 
@@ -61,23 +60,32 @@ def login():
         # Esta burbuja puede alinearse a la izquierda (usuario) o derecha (chatbot), según el parámetro 'alineado_izq'.
         burbuja.pack(padx=10, pady=(5, 0), anchor="w" if alineado_izq else "e")
 
-    # Función para mostrar la fecha
+    # Función 
     def mostrar_fecha(fecha):
+        """Se usa para mostrar la fecha
+
+        Args:
+            fecha (_type_): La fecha actual del documento que se calcula fuera de la función
+        """
         label_Fecha = tk.CTkLabel(marco_Chat, text=fecha, font=("Arial", 10), text_color="#aaaaaa")
         label_Fecha.pack(pady=(0, 5))
 
-    pregunta_Actual = tk.StringVar()  # Guardará la pregunta seleccionada
+    chat_Actual = tk.StringVar()  # Guardará la pregunta seleccionada
     
-    # Función para cargar el chat cuando se hace clic en una pregunta del historial
-    def cargar_chat(pregunta_seleccionada):
-        pregunta_Actual.set(pregunta_seleccionada)  # Guardamos la selección
+    def cargar_chat(chat_seleccionado):
+        """Función para cargar el chat cuando se hace clic en una pregunta del historial
+
+        Args:
+            chat_seleccionado (_type_): 
+        """
+        chat_Actual.set(chat_seleccionado)  # Guardamos la selección
 
         # Limpiar el área de chat antes de cargar nuevos mensajes
         for widget in marco_Chat.winfo_children():
             widget.destroy()
 
         for entrada in historial_Guardado:
-            if isinstance(entrada, dict) and entrada.get("pregunta") == pregunta_seleccionada:
+            if isinstance(entrada, dict) and entrada.get("pregunta") == chat_seleccionado:
                 mostrar_mensaje(f"Tú: {entrada['pregunta']}", alineado_izq=False)
                 mostrar_fecha(entrada["timestamp"])
                 mostrar_mensaje(f"ChatBot: {entrada['respuesta']}", alineado_izq=True)
@@ -90,7 +98,7 @@ def login():
         # Buscar la pregunta seleccionada en el historial guardado
         for entrada in historial_Guardado:
             if isinstance(entrada, dict):  # Verifica que la entrada sea un diccionario
-                if entrada.get("pregunta") == pregunta_seleccionada:  # Usar .get() para evitar KeyError
+                if entrada.get("pregunta") == chat_seleccionado:  # Usar .get() para evitar KeyError
                     # Mostrar la pregunta y la respuesta en el chat
                     mostrar_mensaje(f"Tú: {entrada['pregunta']}", alineado_izq=False)
                     mostrar_fecha(entrada["timestamp"])
@@ -110,8 +118,10 @@ def login():
     caja_Mensaje = tk.CTkEntry(ventana_Chat, width=500)
     caja_Mensaje.place(x=330, y=630) # Posición en la ventana del chat
 
-# --- FUNCIÓN PARA ENVIAR MENSAJE Y OBTENER RESPUESTA DE LA IA ---
+
     def enviar():
+        """Función para enviar mensaje y obtener respuesta de la IA
+        """
         texto = caja_Mensaje.get().strip()# Toma el texto y elimina espacios
         if texto:
             mostrar_mensaje(f"Tú: {texto}", alineado_izq=False)# Muestra tu mensaje en pantalla
@@ -142,11 +152,11 @@ def login():
 
             caja_Mensaje.delete(0, "end") # Borra lo escrito
 
-# --- BOTÓN PARA ENVIAR EL MENSAJE ---
+# Botón para enviar el mensaje
     boton_enviar = tk.CTkButton(ventana_Chat, text="Enviar", command=enviar, width=100)
     boton_enviar.place(x=840, y=630)
 
-# --- BOTÓN PARA CERRAR EL CHAT Y VOLVER AL MENÚ PRINCIPAL ---
+# Botón para cerrar el chat y volver al menú principal 
     def cerrar_chat():
         ventana_Chat.destroy() # Cierra la ventana del chat
         ventana.deiconify() # Muestra la ventana principal
@@ -154,7 +164,7 @@ def login():
     boton_volver = tk.CTkButton(ventana_Chat, text="Volver", command=cerrar_chat)
     boton_volver.place(x=10, y=10)
 
-# --- FUNCIÓN PARA ABRIR UNA VENTANA Y BUSCAR PALABRAS EN EL HISTORIAL ---
+# Función para abrir una ventana y buscar palabras en el historial
     def abrir_ventana_busqueda():
         ventana_Busqueda = tk.CTkToplevel(ventana_Chat) # Nueva ventana encima de la principal
         ventana_Busqueda.title("Buscar en historial")
@@ -183,9 +193,11 @@ def login():
         boton_Realizar_busqueda = tk.CTkButton(ventana_Busqueda, text="Buscar", command=buscar_palabra)
         boton_Realizar_busqueda.pack(pady=5)
 
-    # --- FUNCIÓN PARA RESUMIR UNA CONVERSACIÓN ESPECÍFICA DEL HISTORIAL ---
+    
     def resumir_conversacion():
-        seleccion = pregunta_Actual.get() # Obtiene la pregunta seleccionada en el historial
+        """Función para resumir una conversación específica del historial
+        """
+        seleccion = chat_Actual.get() # Obtiene la pregunta seleccionada en el historial
         if not seleccion:
             mostrar_mensaje("Selecciona una pregunta del historial para resumirla.", alineado_izq=True)
             return
@@ -199,7 +211,7 @@ def login():
                 mostrar_mensaje(resumen, alineado_izq=True)
                 break
 
-# --- BOTONES DE LA PARTE INFERIOR: BUSCAR Y RESUMIR ---
+# Botones de la parte inferior: buscar y resumir
     boton_buscar = tk.CTkButton(ventana_Chat, text="Buscar en historial", fg_color="#35b46d", command=abrir_ventana_busqueda, width=200)
     boton_buscar.place(x=330, y=670)
 
@@ -208,7 +220,7 @@ def login():
 
     ventana_Chat.mainloop()
 
-# --- REGISTRO DE USUARIO NUEVO ---
+# Registro de usuario nuevo
 def register():
     user = entry_Register.get().lower()  # Toma el nombre ingresado en minúsculas
     if not user:
