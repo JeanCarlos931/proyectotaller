@@ -320,5 +320,45 @@
                 "content": "T\u00fa preguntas sobre el prop\u00f3sito de la vida, y el ChatBot responde que es una cuesti\u00f3n profunda y debatida, con respuestas diversas que pueden incluir la b\u00fasqueda de la felicidad, conexiones con otros y realizaci\u00f3n personal. Tambi\u00e9n menciona que cada persona puede tener su propia interpretaci\u00f3n y pregunta si t\u00fa tienes alguna perspectiva personal al respecto."
             }
         ]
+    ],
+    [
+        [
+            {
+                "role": "system",
+                "content": "Eres un asistente \u00fatil y conversacional."
+            },
+            {
+                "role": "user",
+                "content": "Resume esta conversaci\u00f3n en 50 palabras:\nT\u00fa: Cual es la capital de espa\u00f1a\nChatBot: La capital de Espa\u00f1a es Madrid. Es la ciudad m\u00e1s grande del pa\u00eds y un importante centro cultural, econ\u00f3mico y pol\u00edtico. \u00bfTe gustar\u00eda saber algo m\u00e1s sobre Madrid?\n"
+            },
+            {
+                "role": "assistant",
+                "content": "El usuario pregunta por la capital de Espa\u00f1a, y el chatbot responde que es Madrid, describi\u00e9ndola como la ciudad m\u00e1s grande y un centro importante en diversas \u00e1reas. El chatbot se ofrece a proporcionar m\u00e1s informaci\u00f3n sobre Madrid si el usuario est\u00e1 interesado."
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "role": "system",
+                "content": "Eres un asistente \u00fatil y conversacional."
+            },
+            {
+                "role": "user",
+                "content": "Resume esta conversaci\u00f3n en 50 palabras:\nT\u00fa: Cual es la capital de espa\u00f1a\nChatBot: La capital de Espa\u00f1a es Madrid. Es la ciudad m\u00e1s grande del pa\u00eds y un importante centro cultural, econ\u00f3mico y pol\u00edtico. \u00bfTe gustar\u00eda saber algo m\u00e1s sobre Madrid?\n"
+            },
+            {
+                "role": "assistant",
+                "content": "El usuario pregunta por la capital de Espa\u00f1a, y el chatbot responde que es Madrid, describi\u00e9ndola como la ciudad m\u00e1s grande y un centro importante en diversas \u00e1reas. El chatbot se ofrece a proporcionar m\u00e1s informaci\u00f3n sobre Madrid si el usuario est\u00e1 interesado."
+            },
+            {
+                "role": "user",
+                "content": "Resume esta conversaci\u00f3n en 50 palabras:\nT\u00fa: Cual es la capital de espa\u00f1a\nChatBot: La capital de Espa\u00f1a es Madrid. Es la ciudad m\u00e1s grande del pa\u00eds y un importante centro cultural, econ\u00f3mico y pol\u00edtico. \u00bfTe gustar\u00eda saber algo m\u00e1s sobre Madrid?\n"
+            },
+            {
+                "role": "assistant",
+                "content": "El usuario pregunta por la capital de Espa\u00f1a, y el chatbot responde que es Madrid, destacando su tama\u00f1o y su relevancia como centro cultural, econ\u00f3mico y pol\u00edtico. Adem\u00e1s, el chatbot se ofrece a brindar m\u00e1s informaci\u00f3n sobre la ciudad si el usuario lo desea."
+            }
+        ]
     ]
 ]

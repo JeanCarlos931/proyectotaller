@@ -83,9 +83,7 @@ def login():
                     mostrar_mensaje(f"ChatBot: {entrada['respuesta']}", alineado_izq=True)
                     mostrar_fecha(entrada["timestamp"])
                     break
-            else:
-                print(f"Entrada no válida: {entrada}")  # Agrega un mensaje para depurar el tipo de entrada
-
+            
     # Mostrar preguntas como botones en el historial
     for entrada in historial_guardado:
         if isinstance(entrada, dict):  # Solo si es un diccionario válido
@@ -156,7 +154,7 @@ def login():
                 for entrada in historial_guardado:
                     if isinstance(entrada, dict):
                         if palabra in entrada["pregunta"].lower() or palabra in entrada["respuesta"].lower():
-                            resultado_box.insert("end", f"🟢 {entrada['pregunta']}\n{entrada['respuesta']}\n\n")
+                            resultado_box.insert("end", f"{entrada['pregunta']}\n{entrada['respuesta']}\n\n")
 
         boton_realizar_busqueda = tk.CTkButton(ventana_busqueda, text="Buscar", command=buscar_palabra)
         boton_realizar_busqueda.pack(pady=5)
@@ -177,10 +175,10 @@ def login():
                 break
 
     # --- AGREGAR BOTONES AL FINAL ---
-    boton_buscar = tk.CTkButton(ventana_chat, text="🔍 Buscar en historial", fg_color="#35b46d", command=abrir_ventana_busqueda, width=200)
+    boton_buscar = tk.CTkButton(ventana_chat, text="Buscar en historial", fg_color="#35b46d", command=abrir_ventana_busqueda, width=200)
     boton_buscar.place(x=330, y=670)
 
-    boton_resumen = tk.CTkButton(ventana_chat, text="📝 Resumir", fg_color="#35b46d", command=resumir_conversacion, width=200)
+    boton_resumen = tk.CTkButton(ventana_chat, text="Resumir", fg_color="#35b46d", command=resumir_conversacion, width=200)
     boton_resumen.place(x=550, y=670)
 
     ventana_chat.mainloop()
