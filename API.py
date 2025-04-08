@@ -48,11 +48,9 @@ def chat_con_php(mensaje:str)->str:
 
         return mensaje_Respuesta  # Se retorna el mensaje de respuesta del asistente.
     
-    except Exception as e:
-        # En caso de error (por ejemplo, problemas de conexión), se devuelve un mensaje de error.
+    except Exception as e:  # En caso de error (por ejemplo, problemas de conexión), se devuelve un mensaje de error.
         return f"Error al conectar con el servidor: {e}"
 
-# Ciclo de conversación donde el usuario puede interactuar con el asistente hasta que escriba 'salir'.
 def chat(mensaje:str)->str:
     """Funciona de intermediario para poder verificar problemas durante la rpogramación.
 

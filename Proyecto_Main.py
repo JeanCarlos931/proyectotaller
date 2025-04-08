@@ -7,26 +7,33 @@ import API
 
 tk.set_default_color_theme("green")
 
-def guardar_usuario_actual(user):
-    """Guarda el nombre del usuario en un archivo txt."""
-    with open("usuario.txt", "w", encoding="utf-8") as archivo:
+def guardar_usuario_actual(user:str)->None:
+    """Guarda el usuario actual que se está ejecutando en un documento aparte.
+
+    Args:
+        user (_type_): Usuario actual.
+    """
+    with open("usuario.txt", "w", encoding="utf-8") as archivo: #Crea un archivo con el usuario activo
         archivo.write(user)
 
 def login():
-    user = entry_Login.get().lower()
-    if not user:
+    """Usa la interfaz gráfica de tkinter para solicitar el usuario y verificar si existe el archivo
+    """
+    user = entry_Login.get().lower()    #Solicita el usuario.
+    if not user: #Si no escribe un usuario entonces escribe que lo ingrese
         mensaje.configure(text="Por favor, ingresa un nombre de usuario para iniciar sesión.", text_color="red")
         return
 
-    try:
+    try: #Intenta encontrar el archivo asociado al usuario
         with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivo:
             global historial_Guardado  # Hacerlo global para poder usarlo en otras funciones
             historial_Guardado = json.load(archivo)
             mensaje.configure(text=f"Inicio de sesión exitoso. Bienvenido, {user}.", text_color="green")
-    except FileNotFoundError:
+    except FileNotFoundError: #Si no existe el archivo solicita que se registre
         mensaje.configure(text="El usuario no está registrado.", text_color="red")
         return
 
+    
     ventana.withdraw()
     ventana_Chat = tk.CTk()
     ventana_Chat.geometry("1000x700")
