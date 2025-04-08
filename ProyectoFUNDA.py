@@ -101,13 +101,13 @@ def login():
             mostrar_mensaje(f"Tú: {texto}", alineado_izq=False)
             caja_Mensaje.delete(0, "end")
 
-            Mensajerespuesta = API.chat(texto)
-            if Mensajerespuesta:
-                mostrar_mensaje(f"ChatBot: {Mensajerespuesta}", alineado_izq=True)
+            Mensaje_respuesta = API.chat(texto)
+            if Mensaje_respuesta:
+                mostrar_mensaje(f"ChatBot: {Mensaje_respuesta}", alineado_izq=True)
 
                 nueva_Entrada = {
                     "pregunta": texto,
-                    "respuesta": Mensajerespuesta,
+                    "respuesta": Mensaje_respuesta,
                     "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M")
                 }
 

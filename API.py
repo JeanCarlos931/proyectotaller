@@ -31,22 +31,22 @@ def chat_con_php(mensaje:str)->str:
         respuesta = requests.post(URL_PHP, json={"messages": conversacion})
         
         # Se intenta convertir la respuesta en formato JSON.
-        respuestaJson = respuesta.json()
+        respuesta_Json = respuesta.json()
         
         # Extrae el contenido de la respuesta generada por el asistente.
-        mensajeRespuesta = respuestaJson["choices"][0]["message"]["content"]
+        mensaje_Respuesta = respuesta_Json["choices"][0]["message"]["content"]
         
         # Se añade la respuesta del asistente al historial de la conversación.
-        conversacion.append({"role": "assistant", "content": mensajeRespuesta})
+        conversacion.append({"role": "assistant", "content": mensaje_Respuesta})
         
         with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivoUsuario: #Recupero la lista para agregar el chat
-            listaArchivo = json.load(archivoUsuario)
-            listaArchivo.append([conversacion])
+            lista_Archivo = json.load(archivoUsuario)
+            lista_Archivo.append([conversacion])
 
         with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivoUsuario: #Actualiso el archivo de historial
-            json.dump(listaArchivo, archivoUsuario, indent=4)
+            json.dump(lista_Archivo, archivoUsuario, indent=4)
 
-        return mensajeRespuesta  # Se retorna el mensaje de respuesta del asistente.
+        return mensaje_Respuesta  # Se retorna el mensaje de respuesta del asistente.
     
     except Exception as e:
         # En caso de error (por ejemplo, problemas de conexión), se devuelve un mensaje de error.
