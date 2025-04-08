@@ -171,8 +171,8 @@ def login():
         for entrada in historial_guardado:
             if isinstance(entrada, dict) and entrada.get("pregunta") == seleccion:
                 texto = f"Tú: {entrada['pregunta']}\nChatBot: {entrada['respuesta']}\n"
-                resumen = API.chat("Resume esta conversación:\n" + texto)
-                mostrar_mensaje("Resumen de la conversación:", alineado_izq=True)
+                resumen = API.chat("Resume esta conversación en 50 palabras:\n" + texto)
+                mostrar_mensaje("Resumen de la conversación en 50 palabras:", alineado_izq=True)
                 mostrar_mensaje(resumen, alineado_izq=True)
                 break
 
