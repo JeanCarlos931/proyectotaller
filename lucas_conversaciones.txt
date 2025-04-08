@@ -360,5 +360,21 @@
                 "content": "El usuario pregunta por la capital de Espa\u00f1a, y el chatbot responde que es Madrid, destacando su tama\u00f1o y su relevancia como centro cultural, econ\u00f3mico y pol\u00edtico. Adem\u00e1s, el chatbot se ofrece a brindar m\u00e1s informaci\u00f3n sobre la ciudad si el usuario lo desea."
             }
         ]
+    ],
+    [
+        [
+            {
+                "role": "system",
+                "content": "Eres un asistente \u00fatil y conversacional."
+            },
+            {
+                "role": "user",
+                "content": "Resume esta conversaci\u00f3n en 50 palabras:\nT\u00fa: cual es el proposito de la vida?\nChatBot: El prop\u00f3sito de la vida es una de las preguntas m\u00e1s profundas y debatidas en la filosof\u00eda, la religi\u00f3n y la psicolog\u00eda. Para algunas personas, puede estar relacionado con la b\u00fasqueda de la felicidad, la realizaci\u00f3n personal, las conexiones con otros, el crecimiento espiritual, o dejar un legado positivo. Otros pueden encontrar sentido en sus pasiones, en ayudar a los dem\u00e1s o en alcanzar metas espec\u00edficas.\n\nCada persona puede tener su propia interpretaci\u00f3n y b\u00fasqueda del prop\u00f3sito de la vida. \u00bfTienes alguna perspectiva personal sobre esto?\n"
+            },
+            {
+                "role": "assistant",
+                "content": "El prop\u00f3sito de la vida es un tema debatido en filosof\u00eda, religi\u00f3n y psicolog\u00eda. Puede relacionarse con la felicidad, la realizaci\u00f3n personal, conexiones, crecimiento espiritual o dejar un legado. Cada individuo tiene su propia interpretaci\u00f3n y b\u00fasqueda. \u00bfTienes una perspectiva personal al respecto?"
+            }
+        ]
     ]
 ]

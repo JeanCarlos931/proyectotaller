@@ -1,11 +1,10 @@
-import json
+import json # Se importa la librería json para hacer el formato.
 import requests  # Se importa la librería requests para hacer solicitudes HTTP.
 
 # URL del servidor PHP que maneja la lógica del chatbot.
 URL_PHP  = "https://leoviquez.com/IproyectoIntro/"
 
 # Lista que almacena el historial de la conversación.
-# Se inicia con un mensaje del sistema que define el comportamiento del asistente.
 conversacion = [
     {"role": "system", "content": "Eres un asistente útil y conversacional."}
 ]
@@ -21,49 +20,51 @@ def chat_con_php(mensaje:str)->str:
         str: Respuesta generada por el asistente en el servidor PHP o mensaje de error.
     """
 
-    with open("usuario.txt", "r", encoding="utf-8") as archivo_usuario:
+    with open("usuario.txt", "r", encoding="utf-8") as archivo_usuario: # Se actualiza el usuario.
             user = archivo_usuario.read().strip()
 
     # Se añade el mensaje del usuario al historial de la conversación.
     conversacion.append({"role": "user", "content": mensaje})
 
-    try:
+    try: # Se intenta hacer la respuesta de ChatGPT 
         # Se envía una solicitud POST al servidor PHP con el historial de conversación en formato JSON.
         respuesta = requests.post(URL_PHP, json={"messages": conversacion})
         
         # Se intenta convertir la respuesta en formato JSON.
-        respuesta_json = respuesta.json()
+        respuestaJson = respuesta.json()
         
         # Extrae el contenido de la respuesta generada por el asistente.
-        mensaje_respuesta = respuesta_json["choices"][0]["message"]["content"]
+        mensajeRespuesta = respuestaJson["choices"][0]["message"]["content"]
         
         # Se añade la respuesta del asistente al historial de la conversación.
-        conversacion.append({"role": "assistant", "content": mensaje_respuesta})
+        conversacion.append({"role": "assistant", "content": mensajeRespuesta})
         
-        with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivo_usuario: #Recupero la lista para agregar el chat
-            lista_archivo = json.load(archivo_usuario)
-            lista_archivo.append([conversacion])
+        with open(f"{user}_conversaciones.txt", "r", encoding="utf-8") as archivoUsuario: #Recupero la lista para agregar el chat
+            listaArchivo = json.load(archivoUsuario)
+            listaArchivo.append([conversacion])
 
-        with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivo_usuario: #Actualiso el archivo de historial
-            json.dump(lista_archivo, archivo_usuario, indent=4)
+        with open(f"{user}_conversaciones.txt", "w", encoding="utf-8") as archivoUsuario: #Actualiso el archivo de historial
+            json.dump(listaArchivo, archivoUsuario, indent=4)
 
-        return mensaje_respuesta  # Se retorna el mensaje de respuesta del asistente.
+        return mensajeRespuesta  # Se retorna el mensaje de respuesta del asistente.
     
     except Exception as e:
         # En caso de error (por ejemplo, problemas de conexión), se devuelve un mensaje de error.
         return f"Error al conectar con el servidor: {e}"
 
 # Ciclo de conversación donde el usuario puede interactuar con el asistente hasta que escriba 'salir'.
-def chat(mensaje:str):
-    while True:
-        
-        # Si el usuario escribe 'salir', 'exit' o 'quit', finaliza el chat.
-        if mensaje.lower() in ["salir", "exit", "quit"]:
-            return("ChatGPT: ¡Hasta luego!")
-            # Se rompe el bucle y termina el programa.
+def chat(mensaje:str)->str:
+    """Funciona de intermediario para poder verificar problemas durante la rpogramación.
 
-        # Se envía el mensaje del usuario al servidor PHP y se recibe la respuesta.
-        respuesta = chat_con_php(mensaje)
+    Args:
+        mensaje (str): Mensaje del usuario
 
-        # Se muestra la respuesta en la terminal.
-        return(respuesta)
+    Returns:
+        str: Respuesta del chat
+    """
+
+    # Se envía el mensaje del usuario al servidor PHP y se recibe la respuesta.
+    respuesta = chat_con_php(mensaje)
+
+    # Se muestra la respuesta en la terminal.
+    return(respuesta)
